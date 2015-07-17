@@ -1,6 +1,6 @@
 {
-    "name": "brackets-minifier",
-    "title": "Minifier",
+    "name": "brackets-minify",
+    "title": "JS CSS Minifier",
     "description": "Minifies your CSS and JavaScript files with UglifyJS2 and Clean CSS.",
     "homepage": "https://github.com/abagshaw/brackets-minifier",
     "version": "1.0.0",
