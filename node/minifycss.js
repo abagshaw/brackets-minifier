@@ -1,20 +1,27 @@
 (function () {
     "use strict";
-    
+    var path = require('path');
+	var fs = require('fs');
+	var mkpath = require('mkpath');
     var CleanCSS = require("clean-css");
         
-    function minifyCSS(css) {
+    function minifyCSS(filepath, css) {
         var minified = new CleanCSS().minify(css).styles;
-		return minified;
+		return mkfile(filepath, minified);
     }
+	function mkfile(filepath, content) {
+	  mkpath(path.dirname(filepath), function (err) {
+		if (err) {
+		  return "Error saving file!";
+		}
+		fs.writeFile(filepath, content);
+	  });
+	  return "Minified";
+	}
     
-    /**
-     * Initializes the test domain with several test commands.
-     * @param {DomainManager} domainManager The DomainManager for the server
-     */
     function init(domainManager) {
-        if (!domainManager.hasDomain("simple")) {
-            domainManager.registerDomain("simple", {major: 0, minor: 1});
+        if (!domainManager.hasDomain("minifycss")) {
+            domainManager.registerDomain("minifycss", {major: 0, minor: 1});
         }
         domainManager.registerCommand(
             "minifycss",       // domain name
@@ -22,12 +29,15 @@
             minifyCSS,   // command handler function
             false,          // this command is synchronous in Node
             "Minifies CSS using Clean CSS",
-            [{name: "css", // parameters
+            [{name: "filepath", // parameters
+                type: "string",
+                description: "Where to save minified CSS"},
+			{name: "css", // parameters
                 type: "string",
                 description: "CSS to be minified"}],
-            [{name: "minifiedCSS", // return values
+            [{name: "returnText", // return values
                 type: "string",
-                description: "Minified CSS"}]
+                description: "Return status of save"}]
         );
     }
     

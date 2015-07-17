@@ -50,10 +50,9 @@ define(function(require, exports, module) {
             }, 1000);
         } else if (lan === "js") {
             var path = file.fullPath.replace(".js", ".min.js");
-			jsAction.exec("goMinifyJS", editor.document.getText(), prefs.get("js-compress"), prefs.get("js-mangle"))
-			.done(function (minifiedJS) {
-				save(minifiedJS, path);
-				status("Minified");
+			jsAction.exec("goMinifyJS", path, editor.document.getText(), prefs.get("js-compress"), prefs.get("js-mangle"))
+			.done(function (returnText) {
+				status(returnText);
 			}).fail(function (err) {
 				status("Error Occured!");
 			});
@@ -62,10 +61,9 @@ define(function(require, exports, module) {
             }, 1000);
         } else if (lan === "css") {
 			var path = file.fullPath.replace(".css", ".min.css");
-			cssAction.exec("goMinifyCSS", editor.document.getText())
-				.done(function (minifiedCSS) {
-					save(minifiedCSS, path);
-					status("Minified");
+			cssAction.exec("goMinifyCSS", path, editor.document.getText())
+				.done(function (returnText) {
+					status(returnText);
 				}).fail(function (err) {
 					status("Error Occured!");
 				});
