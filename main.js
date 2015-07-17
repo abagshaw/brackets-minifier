@@ -26,6 +26,8 @@ define(function(require, exports, module) {
 
     // Define preferences
     prefs.definePreference("on-save", "boolean", false);
+	prefs.definePreference("js-compress", "boolean", true);
+	prefs.definePreference("js-mangle", "boolean", true);
 
     // Set up indicator
     $("#status-indicators").prepend('<div id="min-status" style="text-align: right;"></div>');
@@ -48,7 +50,7 @@ define(function(require, exports, module) {
             }, 1000);
         } else if (lan === "js") {
             var path = file.fullPath.replace(".js", ".min.js");
-			jsAction.exec("goMinifyJS", editor.document.getText())
+			jsAction.exec("goMinifyJS", editor.document.getText(), prefs.get("js-compress"), prefs.get("js-mangle"))
 			.done(function (minifiedJS) {
 				save(minifiedJS, path);
 				status("Minified");

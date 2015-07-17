@@ -3,12 +3,14 @@
     
     var UglifyJS = require("uglifyjs");
         
-    function minifyJS(js) {
+    function minifyJS(js, compress, mangle) {
         var ast = UglifyJS.parse(js);
 		ast.figure_out_scope();
 		ast.compute_char_frequency();
-		ast = ast.transform(UglifyJS.Compressor());
-		ast.mangle_names();
+		if (compress)
+			ast = ast.transform(UglifyJS.Compressor());
+		if (mangle)
+			ast.mangle_names();
 		var minified = ast.print_to_string();
 		return minified;
     }
@@ -29,7 +31,13 @@
             "Minifies JS using Clean JS",
             [{name: "js", // parameters
                 type: "string",
-                description: "JS to be minified"}],
+                description: "JS to be minified"},
+			{name: "compress", // parameters
+				type: "string",
+				description: "True to compress"},
+			{name: "mangle", // parameters
+				type: "string",
+				description: "True to mangle"}],
             [{name: "minifiedJS", // return values
                 type: "string",
                 description: "Minified JS"}]
