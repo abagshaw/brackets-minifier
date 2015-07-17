@@ -1,0 +1,21 @@
+{
+    "name": "brackets-minifier",
+    "title": "Minifier",
+    "description": "Minifies your CSS and JavaScript files with UglifyJS2 and Clean CSS.",
+    "homepage": "https://github.com/abagshaw/brackets-minifier",
+    "version": "1.0.0",
+    "author": "Andrew Bagshaw",
+    "license": "https://github.com/abagshaw/brackets-minifier#license",
+    "engines": {
+        "brackets": ">=0.24.0"
+    },
+    "keywords": [
+        "css",
+        "js",
+        "minify",
+        "optimization",
+        "min",
+        "uglifyjs",
+        "clean css"
+    ]
+}
