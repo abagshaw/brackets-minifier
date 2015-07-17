@@ -12,7 +12,8 @@ define(function(require, exports, module) {
         FileSystem = brackets.getModule("filesystem/FileSystem"),
         PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
 		ExtensionUtils = brackets.getModule("utils/ExtensionUtils"),
-        NodeDomain = brackets.getModule("utils/NodeDomain");
+        NodeDomain = brackets.getModule("utils/NodeDomain"),
+		Strings = require("strings");
 		
 	var cssAction = new NodeDomain("minifycss", ExtensionUtils.getModulePath(module, "node/minifycss"));
 	var jsAction = new NodeDomain("minifyjs", ExtensionUtils.getModulePath(module, "node/minifyjs"));
@@ -114,8 +115,8 @@ define(function(require, exports, module) {
     var contextMenu = Menus.getContextMenu(Menus.ContextMenuIds.EDITOR_MENU);
     var cmd_min_id = "minifier.min";
     var cmd_auto_id = "minifier.auto";
-    CommandManager.register("Minify", cmd_min_id, compile);
-    CommandManager.register("Minify on Save", cmd_auto_id, function() {
+    CommandManager.register(Strings.MINIFY, cmd_min_id, compile);
+    CommandManager.register(Strings.MINIFY_ON_SAVE, cmd_auto_id, function() {
         this.setChecked(!this.getChecked());
     });
 

@@ -9,6 +9,10 @@
     "engines": {
         "brackets": ">=0.24.0"
     },
+	"i18n": [
+        "en", 
+        "it" 
+    ],
     "keywords": [
         "css",
         "js",
