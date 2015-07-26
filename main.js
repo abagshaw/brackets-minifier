@@ -38,7 +38,10 @@ define(function(require, exports, module) {
 	
 	var mainProjectPath;
 
-	function stripFrontSlash(str) {
+	function stripSlashes(str, leaveBack) {
+		if(leaveBack){
+			return str.replace(/^\//, "").replace(/^\\/, "")
+		}
 		return str.replace(/^\/+|\/+$/, "").replace(/^\\+|\\+$/, "");
 	}
 	function checkProjectComplete(){
@@ -160,7 +163,7 @@ define(function(require, exports, module) {
 			}
 			for(i = 0; i < excludedFolders.length; i++)
 			{
-				if(stripFrontSlash(fullPath.replace(mainProjectPath, "")).indexOf(stripFrontSlash(excludedFolders[i])) === 0)
+				if(stripSlashes(fullPath.replace(mainProjectPath, "")).indexOf(stripSlashes(excludedFolders[i], true)) === 0)
 				{
 					return false;
 				}
@@ -189,7 +192,7 @@ define(function(require, exports, module) {
 		if(customPath != "")
 		{
 			mainPath = mainProjectPath;
-			customPath = FileUtils.convertToNativePath(stripFrontSlash(customPath).concat("/").concat(FileUtils.getBaseName(file.fullPath.replace(".".concat(lan), ".min.".concat(lan)))));
+			customPath = FileUtils.convertToNativePath(stripSlashes(customPath).concat("/").concat(FileUtils.getBaseName(file.fullPath.replace(".".concat(lan), ".min.".concat(lan)))));
 		}
 		
         if (lan === "js") {

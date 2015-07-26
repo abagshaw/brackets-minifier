@@ -22,7 +22,7 @@ define(function (require, exports, module) {
 	prefs.definePreference("js-project-minify", "boolean", true);
 	prefs.definePreference("css-project-minify", "boolean", true);
 	
-	//Transfer old prefs from 1.0.4 and below - will be removed in 1.1.1
+	//Transfer old prefs from 1.0.4 and below - will be removed in future release
 	if(oldPrefs.get("on-save") == true)
 	{
 		prefs.set("on-save", true, "user");
