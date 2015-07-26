@@ -81,7 +81,7 @@ define(function(require, exports, module) {
         minifyCSS[0].checked   = !!getPref("css-project-minify");
         mangleJS[0].checked    = !!getPref("js-mangle");
         compressJS[0].checked  = !!getPref("js-compress");
-		jsPath.val(getPref("js-custom-path"));
+        jsPath.val(getPref("js-custom-path"));
         cssPath.val(getPref("css-custom-path"));
         excludes.val(getPref("project-exclude").replace(/<br>/g, "\n"));
 

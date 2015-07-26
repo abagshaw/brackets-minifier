@@ -29,7 +29,7 @@ define(function(require, exports, module) {
         actionID     = 0;
 
     var mainProjectPath,
-	    excludedFolders;
+        excludedFolders;
 
     function stripSlashes(str, leaveBack) {
         if (leaveBack) {
