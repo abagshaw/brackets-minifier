@@ -4,7 +4,6 @@
 
 
 ## Installation
-----
 1. Run Brackets
 2. Select *File > Install Extension...*
 3. Enter `https://github.com/abagshaw/brackets-minifier/archive/master.zip` as Extension URL.
@@ -14,7 +13,6 @@
 Clone this repository into `~/Library/Application Support/Brackets/extensions/user/` and restart Brackets.
 
 ## Features
----
 - [Single File Minification](#single-file-minification)
 - [Project Minification](#project-minification)
 - [Custom Save Directories](#custom-save-directories)
