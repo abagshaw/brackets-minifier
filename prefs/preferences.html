@@ -1,0 +1,59 @@
+<div class="minifier-preferences-dialog modal">
+    <div class="modal-header">
+        <h1 class="dialog-title">{{PREFS_TITLE}}</h1>
+    </div>
+    <div class="modal-body">
+		<div class="field-container clearfix">
+            <label style="float: none;text-align:center;">
+                {{{PREFS_NOTE}}}
+            </label>
+        </div>
+        <div class="field-container clearfix" style="padding-left:20px;padding-top:15px;">
+            <label style="float: none;display:inline-block;">
+                <input type="checkbox" name="tab" id="minifier-save-project" /> {{{MINIFY_PROJECT_SAVE}}}
+            </label>
+        </div>
+		<div class="field-container clearfix" style="padding-left:20px;padding-top:8px;">
+            <label style="float: none;display:inline-block;">
+                <input type="checkbox" name="tab" id="minifier-js-bool" /> {{MINIFY_JS}}
+            </label>
+        </div>
+		<div class="field-container clearfix" style="padding-left:20px;padding-top:8px;">
+            <label style="float: none;display:inline-block;">
+                <input type="checkbox" name="tab" id="minifier-css-bool" /> {{MINIFY_CSS}}
+            </label>
+        </div>
+        <div class="field-container clearfix" style="padding-left:20px;padding-right:20px;padding-top: 15px;">
+            <label style="padding-right: 6px;box-sizing: border-box;">{{CUSTOM_JS_PATH}}</label>
+            <input type="text" name="minifier-js-path" id="minifier-js-path" style="width:100%;" />
+        </div>
+		<div class="field-container clearfix" style="padding-left:20px;padding-right:20px;padding-top: 8px;">
+            <label style="padding-right: 6px;box-sizing: border-box;">{{CUSTOM_CSS_PATH}}</label>
+            <input type="text" name="minifier-css-path" id="minifier-css-path" style="width:100%;" />
+        </div>
+		<div class="field-container clearfix" style="padding-left:20px;padding-right:20px;padding-top: 8px;">
+            <label style="padding-right: 6px;box-sizing: border-box;">{{MINIFY_EXCLUDE}}</label>
+            <textarea name="minifier-exclude-path" id="minifier-exclude-paths" rows="5" style="white-space:nowrap;overflow: auto;width:100%;"></textarea>
+        </div>
+		<hr style="margin-left:20px;margin-right:6px;border-color:#000;border-bottom:0px;">
+		<div class="field-container clearfix">
+            <label style="float: none;padding-left:20px;text-align:left;">
+                {{UGLIFYJS_SETTINGS}}
+            </label>
+        </div>
+		<div class="field-container clearfix" style="padding-left:20px;padding-top:10px;">
+            <label style="float: none;display:inline-block;">
+                <input type="checkbox" name="tab" id="minifier-manglejs" /> {{MANGLE_JS}}
+            </label>
+        </div>
+		<div class="field-container clearfix" style="padding-left:20px;padding-top:8px;">
+            <label style="float: none;display:inline-block;">
+                <input type="checkbox" name="tab" id="minifier-compressjs" /> {{COMPRESS_JS}}
+            </label>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="dialog-button btn primary" data-button-id="ok">{{SAVE}}</a>
+        <a href="#" class="dialog-button btn" data-button-id="cancel">{{CANCEL}}</a>
+    </div>
+</div>
