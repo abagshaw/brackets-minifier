@@ -2,7 +2,7 @@
 /*global define, $, brackets, window, document, clearTimeout, setTimeout, localStorage */
 define(function(require, exports, module) {
     "use strict";
-	
+
     var CommandManager  = brackets.getModule("command/CommandManager"),
         Menus           = brackets.getModule("command/Menus"),
         EditorManager   = brackets.getModule("editor/EditorManager"),
@@ -15,13 +15,13 @@ define(function(require, exports, module) {
         LanguageManager = brackets.getModule("language/LanguageManager"),
         prefs           = require("prefs/preferences"),
         Strings         = require("strings");
-	
+
     var cssAction = new NodeDomain("minifycss", ExtensionUtils.getModulePath(module, "node/minifycss")),
         jsAction  = new NodeDomain("minifyjs", ExtensionUtils.getModulePath(module, "node/minifyjs"));
-	
+
     $("#status-indicators").prepend('<div id="min-status" style="text-align: right;"></div>');
     var tunnel = $("#min-status");
-	
+
     var inAction     = false,
         wholeProject = false,
         totalSuccess = 0,
@@ -66,7 +66,7 @@ define(function(require, exports, module) {
         tunnel.text(text);
         if (length !== 0) {
             setTimeout(function(actionIDpass) {
-                if (actionIDpass == actionID) {
+                if (actionIDpass === actionID) {
                     tunnel.text("");
                     tunnel.css("color", "#000");
                 }
@@ -79,10 +79,10 @@ define(function(require, exports, module) {
             console.log(returnText);
             return;
         }
-        if (returnText == "0") {
+        if (returnText === "0") {
             statusUpdate(Strings.FOLDER_ERROR, 1, 2500);
             inAction = false;
-        } else if (returnText == "1") {
+        } else if (returnText === "1") {
             if (!wholeProject) {
                 statusUpdate(Strings.MINIFIED, 0, 1500);
                 inAction = false;
@@ -102,7 +102,7 @@ define(function(require, exports, module) {
             }
         }
     }
-	
+
     jsAction.on("statusUpdate", statusUpdateCallback);
     cssAction.on("statusUpdate", statusUpdateCallback);
 
@@ -111,16 +111,22 @@ define(function(require, exports, module) {
             var fullPath     = FileUtils.convertToNativePath(file.fullPath),
                 fileName     = FileUtils.getBaseName(fullPath),
                 fileLanguage = fileName.split(".").pop();
-			
+
             if (fileName.match(new RegExp("\\.min\\." + fileLanguage)) || (fileLanguage !== "js" && fileLanguage !== "css")) {
                 return false;
-            } else if (!prefs.get("js-project-minify") && fileLanguage == "js") {
-                return false;
-            } else if (!prefs.get("css-project-minify") && fileLanguage == "css") {
+            }
+            if (!prefs.get("js-project-minify") && fileLanguage === "js") {
                 return false;
             }
-            for (i = 0; i < excludedFolders.length; i++) {
-                if (stripSlashes(fullPath.replace(mainProjectPath, "")).indexOf(stripSlashes(excludedFolders[i], true)) === 0) {
+            if (!prefs.get("css-project-minify") && fileLanguage === "css") {
+                return false;
+            }
+            for (var i = 0; i < excludedFolders.length; i++) {
+                var curentExclude = FileUtils.convertToNativePath(excludedFolders[i]);
+                if (stripSlashes(fullPath.replace(mainProjectPath, "")) === stripSlashes(curentExclude)) {
+                    return false;
+                }
+                if (curentExclude.match(/\\$|\/$/) && stripSlashes(fullPath.replace(mainProjectPath, "")).indexOf(stripSlashes(curentExclude, true)) === 0) {
                     return false;
                 }
             }
@@ -146,12 +152,12 @@ define(function(require, exports, module) {
     function process(lan, file) {
         var customPath = prefs.get(lan.concat("-custom-path")),
             mainPath   = (file.fullPath).replace(".".concat(lan), ".min.".concat(lan));
-		
+
         if (customPath !== "") {
             mainPath = mainProjectPath;
             customPath = FileUtils.convertToNativePath(stripSlashes(customPath).concat("/").concat(FileUtils.getBaseName(file.fullPath.replace(".".concat(lan), ".min.".concat(lan)))));
         }
-		
+
         if (lan === "js") {
             minifyJS(file.fullPath, mainPath, customPath);
         } else if (lan === "css") {
@@ -234,19 +240,19 @@ define(function(require, exports, module) {
         cmd_min_project_id = "minifier.minproject",
         cmd_auto_id        = "minifier.auto",
         cmd_prefs          = "minifier.prefs";
-	
+
     CommandManager.register(Strings.MINIFY, cmd_min_id, compileCurrent);
     CommandManager.register(Strings.MINIFY_PROJECT, cmd_min_project_id, compileProject);
     CommandManager.register(Strings.MINIFY_ON_SAVE, cmd_auto_id, function() {
         this.setChecked(!this.getChecked());
     });
     CommandManager.register(Strings.MINIFIER_PREFS, cmd_prefs, prefs.showPreferencesDialog);
-	
+
     var automaton = CommandManager.get(cmd_auto_id);
     $(automaton).on('checkedStateChange', function() {
         prefs.set("on-save", automaton.getChecked());
     });
-	
+
     menu.addMenuItem(cmd_min_id, "Ctrl-M");
     menu.addMenuItem(cmd_min_project_id, "Ctrl-Alt-M");
     menu.addMenuItem(automaton);

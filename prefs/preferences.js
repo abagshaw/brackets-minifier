@@ -3,9 +3,7 @@ define(function(require, exports, module) {
 
     var Dialogs            = brackets.getModule("widgets/Dialogs"),
         PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
-        ProjectManager     = brackets.getModule("project/ProjectManager"),
         Strings            = require("strings"),
-        FileSystem         = brackets.getModule("filesystem/FileSystem"),
         PrefsTemplate      = require("text!prefs/preferences.html");
 
     var prefs    = PreferencesManager.getExtensionPrefs("brackets-minifier"),
@@ -34,7 +32,7 @@ define(function(require, exports, module) {
     }
 
     function setPref(pref, value, passedScope) {
-        if (passedScope == "project" || passedScope == "user") {
+        if (passedScope === "project" || passedScope === "user") {
             prefs.set(pref, value, {
                 location: {
                     scope: passedScope
@@ -45,7 +43,7 @@ define(function(require, exports, module) {
         }
     }
 
-    function showMinifierPreferencesDialog(baseUrl, errorMessage) {
+    function showMinifierPreferencesDialog() {
         var dialogWindow, projectSave, minifyJS, minifyCSS, jsPath, cssPath, excludes, mangleJS, compressJS;
         $.valHooks.textarea = {
             get: function(elem) {

@@ -24,7 +24,7 @@
             filepath = path.resolve(filepath, customPath);
         }
         var err = mkpath.sync(path.dirname(filepath));
-        if (err && err.code != 'EEXIST') {
+        if (err && err.code !== 'EEXIST') {
             domainManager.emitEvent("minifycss", "statusUpdate", "0");
             return;
         }
@@ -70,6 +70,6 @@
                 description: "Text returned"
             }]);
     }
-	
+
     exports.init = init;
 }());

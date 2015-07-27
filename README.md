@@ -26,7 +26,7 @@ To minify all JS and CSS files in the current project, use the keyboard shortcut
 **NOTE: To minify the whole project on save you must *also* check the *Minify on Save* option in the *Edit* menu.**
 
 ####Excluding Files/Directories/Filetypes
-You can exclude certain directories and files by entering each directory/file on a new line in the *Directories/Files to Exclude from Project Minification* area.
+You can exclude certain directories and files by entering each directory/file on a new line in the *Directories/Files to Exclude from Project Minification* area. Excluded directories must include trailing slash!
 
 You can also exclude all JS or CSS files from being minified by unchecking either of the *Minify JavaScript during Project Minification* or *Minify CSS during Project Minification* options in the *Minifier Preferences* panel. 
 

@@ -18,8 +18,12 @@
         var ast = UglifyJS.parse(text);
         ast.figure_out_scope();
         ast.compute_char_frequency();
-        if (compress) ast = ast.transform(UglifyJS.Compressor());
-        if (mangle) ast.mangle_names();
+        if (compress) {
+            ast = ast.transform(UglifyJS.Compressor());
+        }
+        if (mangle) {
+            ast.mangle_names();
+        }
         var minified = ast.print_to_string();
         return mkfile(filepath, customPath, minified);
     }
@@ -29,7 +33,7 @@
             filepath = path.resolve(filepath, customPath);
         }
         var err = mkpath.sync(path.dirname(filepath));
-        if (err && err.code != 'EEXIST') {
+        if (err && err.code !== 'EEXIST') {
             domainManager.emitEvent("minifyjs", "statusUpdate", "0");
             return;
         }
