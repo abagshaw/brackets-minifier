@@ -4,7 +4,7 @@
     var path     = require('path'),
         fs       = require('fs'),
         mkpath   = require('mkpath'),
-        UglifyJS = require("uglifyjs");
+        UglifyJS = require("uglify-js");
 
     var domainManager;
 
