@@ -7,7 +7,7 @@ define({
     "CANCEL"              : "Peruuta",
     "PREFS_TITLE"         : "Pienentimen projektiasetukset",
     "PREFS_NOTE"          : "Nämä asetukset tallennetaan nykyisen projektin juurikansion tiedostoon <strong>.brackets.json</strong>.<br>HUOM.: kaikki mukautetut tallennus- ja ohituspolut alkavat projektin juurikansiosta.",
-    "MINIFY_PROJECT_SAVE" : "Pienennä projekti tallennettaessa - <strong>HUOM.: valinnan ”Pienennä tallennettaessa” täytyy olla valittuna!</strong>",
+    "MINIFY_PROJECT_SAVE" : "Pienennä projekti tallennettaessa \u2013 <strong>HUOM.: valinnan ”Pienennä tallennettaessa” täytyy olla valittuna!</strong>",
     "MINIFY_JS"           : "Pienennä JavaScript",
     "MINIFY_CSS"          : "Pienennä CSS",
     "CUSTOM_JS_PATH"      : "Mukautettu pienennetyn JavaScriptin polku:",
@@ -24,7 +24,7 @@ define({
     "GENERAL_ERROR"       : "Tapahtui virhe! Tarkista konsoli",
     "NOT_MINIFIABLE"      : "Tiedostotyyppi ei ole pienennettävä",
     "ALREADY_MINIFIED"    : "Tiedosto on jo pienennetty",
-    "MINIFYING"           : "Pienennetään...",
-    "MINIFYING_PROJECT"   : "Pienennetään projektia...",
+    "MINIFYING"           : "Pienennetään\u2026",
+    "MINIFYING_PROJECT"   : "Pienennetään projektia\u2026",
     "NO_FILES"            : "Ei pienennettäviä tiedostoja!",
 });
