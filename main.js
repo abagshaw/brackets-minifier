@@ -112,6 +112,9 @@ define(function(require, exports, module) {
                 fileName     = FileUtils.getBaseName(fullPath),
                 fileLanguage = fileName.split(".").pop();
 
+            if(fullPath.indexOf(mainProjectPath) !== 0) {
+                return false;
+            }
             if (fileName.match(new RegExp("\\.min\\." + fileLanguage)) || (fileLanguage !== "js" && fileLanguage !== "css")) {
                 return false;
             }
@@ -138,22 +141,33 @@ define(function(require, exports, module) {
     function minifyJS(currentPath, path, customPath) {
         jsAction.exec("goMinifyJS", currentPath, path, customPath, prefs.get("js-compress"), prefs.get("js-mangle")).fail(function(err) {
             console.log(err.toString());
-            statusUpdate(Strings.GENERAL_ERROR, 2, 3000);
+            if (wholeProject) {
+                totalFiles--;
+                checkProjectComplete();
+            } else {
+                statusUpdate(Strings.GENERAL_ERROR, 2, 3000);
+                inAction = false;
+            }
         });
     }
 
     function minifyCSS(currentPath, path, customPath) {
         cssAction.exec("goMinifyCSS", currentPath, path, customPath).fail(function(err) {
-            console.log(err.toString());
-            statusUpdate(Strings.GENERAL_ERROR, 2, 3000);
+            if (wholeProject) {
+                totalFiles--;
+                checkProjectComplete();
+            } else {
+                statusUpdate(Strings.GENERAL_ERROR, 2, 3000);
+                inAction = false;
+            }
         });
     }
 
     function process(lan, file) {
         var customPath = prefs.get(lan.concat("-custom-path")),
-            mainPath   = (file.fullPath).replace(".".concat(lan), ".min.".concat(lan));
+            mainPath   = FileUtils.convertToNativePath((file.fullPath).replace(".".concat(lan), ".min.".concat(lan)));
 
-        if (customPath !== "") {
+        if (customPath !== "" && mainPath.indexOf(mainProjectPath) === 0) {
             mainPath = mainProjectPath;
             customPath = FileUtils.convertToNativePath(stripSlashes(customPath).concat("/").concat(FileUtils.getBaseName(file.fullPath.replace(".".concat(lan), ".min.".concat(lan)))));
         }
@@ -166,7 +180,32 @@ define(function(require, exports, module) {
             console.log(Strings.NOT_MINIFIABLE);
         }
     }
-
+    
+    function processAfterSave(fileLanguage, currentDocument) {
+        if(currentDocument === undefined) {
+            process(fileLanguage, file);
+            return;
+        }
+        if (currentDocument.isDirty) {
+            FileUtils.writeText(FileSystem.getFileForPath(currentDocument.file.fullPath), currentDocument.getText(), true)
+                .done(function() {
+                    currentDocument.notifySaved();
+                    process(fileLanguage, currentDocument.file);
+                }).fail(function(err) {
+                    console.log(err.toString());
+                    if(wholeProject) {
+                        totalFiles--;
+                        checkProjectComplete();
+                    } else {
+                        statusUpdate(Strings.FILE_ERROR, 2, 3000);
+                        inAction = false;
+                    }
+                });
+        } else {
+            process(fileLanguage, currentDocument.file);
+        }
+    }
+    
     function compileCurrent() {
         if (inAction) {
             return;
@@ -190,16 +229,15 @@ define(function(require, exports, module) {
             statusUpdate(Strings.NOT_MINIFIABLE, 0, 1750);
             inAction = false;
             return;
-        } else {
-            process(fileLanguage, editor.document.file);
         }
+        processAfterSave(fileLanguage, editor.document);
     }
 
     function compileProject() {
-        excludedFolders = prefs.get("project-exclude").split("<br>").filter(Boolean);
         if (inAction) {
             return;
         }
+        excludedFolders = prefs.get("project-exclude").split("<br>").filter(Boolean);
         mainProjectPath = FileUtils.convertToNativePath(ProjectManager.getProjectRoot().fullPath);
         inAction = true;
         wholeProject = true;
@@ -212,9 +250,15 @@ define(function(require, exports, module) {
                 inAction = false;
                 return;
             }
+            var openDocuments = DocumentManager.getAllOpenDocuments().filter(function(currentDocument) { return currentDocument.file; });
+            var openDocumentPaths = $.map(openDocuments, function (oneDoc){ return oneDoc.file.fullPath; });
             fileListResult.forEach(function(file) {
                 var fileLanguage = file.fullPath.split('.').pop();
-                process(fileLanguage, file);
+                if (openDocumentPaths.indexOf(file.fullPath) > -1) {
+                    processAfterSave(fileLanguage, openDocuments[openDocumentPaths.indexOf(file.fullPath)]);
+                } else {
+                    process(fileLanguage, file);
+                }
             });
         }).fail(function(err) {
             console.log(err)
@@ -222,7 +266,12 @@ define(function(require, exports, module) {
     }
     $(DocumentManager).on("documentSaved", function(event, doc) {
         if (prefs.get("on-save")) {
-            if (prefs.get("on-save-project")) {
+            var editor = EditorManager.getActiveEditor();
+            if (!editor) {
+                inAction = false;
+                return;
+            }
+            if (prefs.get("on-save-project") && FileUtils.convertToNativePath(editor.document.file.fullPath).indexOf(FileUtils.convertToNativePath(ProjectManager.getProjectRoot().fullPath)) === 0) {
                 compileProject();
             } else {
                 var lan = doc.file.name.split(".").pop();
