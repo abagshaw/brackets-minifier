@@ -6,8 +6,7 @@ define(function(require, exports, module) {
         Strings            = require("strings"),
         PrefsTemplate      = require("text!prefs/preferences.html");
 
-    var prefs    = PreferencesManager.getExtensionPrefs("brackets-minifier"),
-        oldPrefs = PreferencesManager.getExtensionPrefs("brackets-minifer");
+    var prefs    = PreferencesManager.getExtensionPrefs("brackets-minifier");
 
     prefs.definePreference("on-save", "boolean", false);
     prefs.definePreference("on-save-project", "boolean", false);
@@ -19,16 +18,16 @@ define(function(require, exports, module) {
     prefs.definePreference("js-project-minify", "boolean", true);
     prefs.definePreference("css-project-minify", "boolean", true);
 
-    //Transfer old prefs from 1.0.4 and below - will be removed in future release
-    if (oldPrefs.get("on-save") === true) {
-        prefs.set("on-save", true, "user");
-        oldPrefs.set("on-save", undefined);
-    } else if (oldPrefs.get("on-save") === false) {
-        oldPrefs.set("on-save", undefined);
-    }
-
-    function getPref(pref) {
-        return prefs.get(pref);
+    function getPref(pref, passedScope) {
+        if (passedScope === "project" || passedScope === "user") {
+            return prefs.get(pref, {
+                location: {
+                    scope: passedScope
+                }
+            });
+        } else {
+            return prefs.get(pref);
+        }
     }
 
     function setPref(pref, value, passedScope) {
