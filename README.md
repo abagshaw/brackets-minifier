@@ -18,10 +18,10 @@ Clone this repository into `~/Library/Application Support/Brackets/extensions/us
 - [Custom Save Directories](#custom-save-directories)
 
 ### Single File Minification
-To minify a file, use the keyboard shortcut `Cmd/Ctrl+M` (this will also save the file if there are unsaved changes). You can also minify files on save by checking *Minify on Save* in the *Edit* menu.
+To minify a file, use the keyboard shortcut `Cmd/Ctrl+Alt+M` (this will also save the file if there are unsaved changes). You can also minify files on save by checking *Minify on Save* in the *Edit* menu.
 
 ### Project Minification
-To minify all JS and CSS files in the current project (and subdirectories), use the keyboard shortcut `Cmd/Ctrl+Alt+M`. You can also set the whole project to be minified on save by going to *Edit -> Minifier Preferences* and selecting *Minify Project on Save*. This will minify the all JS and CSS files in the current project when saving *any file* located in the current project - not necessarily a JS or CSS file. If any file about to be minified has unsaved changes, it will be saved first.
+To minify all JS and CSS files in the current project (and subdirectories), use the keyboard shortcut `Cmd/Ctrl+Alt+A`. You can also set the whole project to be minified on save by going to *Edit -> Minifier Preferences* and selecting *Minify Project on Save*. This will minify the all JS and CSS files in the current project when saving *any file* located in the current project - not necessarily a JS or CSS file. If any file about to be minified has unsaved changes, it will be saved first.
 
 **NOTE: To minify the whole project on save you must *also* check the *Minify on Save* option in the *Edit* menu.**
 

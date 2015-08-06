@@ -302,8 +302,8 @@ define(function(require, exports, module) {
         prefs.set("on-save", automaton.getChecked());
     });
 
-    menu.addMenuItem(cmd_min_id, "Ctrl-M");
-    menu.addMenuItem(cmd_min_project_id, "Ctrl-Alt-M");
+    menu.addMenuItem(cmd_min_id, [{ "key": "Ctrl-M" }, { "key": "Ctrl-Alt-M"}]); //Keeping existing Ctrl-M key binding for Windows users. Will be removed in future versions.
+    menu.addMenuItem(cmd_min_project_id, "Ctrl-Alt-A");
     menu.addMenuItem(automaton);
     menu.addMenuItem(cmd_prefs);
     menu.addMenuDivider('before', 'minifier.min');
