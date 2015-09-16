@@ -10,6 +10,8 @@ define({
     "MINIFY_PROJECT_SAVE" : "Minify Project on Save \u2013 <strong>NOTE: 'Minify on Save' must be checked!</strong>",
     "MINIFY_JS"           : "Minify JavaScript during Project Minification",
     "MINIFY_CSS"          : "Minify CSS during Project Minification",
+    "GENERATE_MAP"        : "Generate source maps for .js files",
+    "KEEP_LICENSE"        : "Keep license notice at the beginning (if exists)",
     "CUSTOM_JS_PATH"      : "Custom Path for Minified JavaScript (leave blank for same folder as original file):",
     "CUSTOM_CSS_PATH"     : "Custom Path for Minified CSS (leave blank for same folder as original file):",
     "MINIFY_EXCLUDE"      : "Directories/Files to Exclude from Project Minification (each on seperate line):",

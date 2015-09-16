@@ -12,6 +12,8 @@ define({
     "MINIFY_CSS"          : "Minify CSS",
     "CUSTOM_JS_PATH"      : "Personalizza percorso Minified JavaScript:",
     "CUSTOM_CSS_PATH"     : "Personalizza percorso Minified CSS:",
+    "GENERATE_MAP"        : "Generate source maps for .js files",
+    "KEEP_LICENSE"        : "Keep license notice at the beginning (if exists)",
     "MINIFY_EXCLUDE"      : "Cartelle/File esclusi (ciascuno su una riga separata):",
     "UGLIFYJS_SETTINGS"   : "Impostazioni UglifyJS2 (solo applicato al progetto attuale)",
     "MANGLE_JS"           : "Mangle JavaScript",
