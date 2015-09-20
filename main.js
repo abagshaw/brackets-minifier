@@ -264,7 +264,7 @@ define(function(require, exports, module) {
             console.log(err)
         });
     }
-    $(DocumentManager).on("documentSaved", function(event, doc) {
+    DocumentManager.on("documentSaved", function(event, doc) {
         if (prefs.get("on-save")) {
             var editor = EditorManager.getActiveEditor();
             if (!editor) {
@@ -298,7 +298,7 @@ define(function(require, exports, module) {
     CommandManager.register(Strings.MINIFIER_PREFS, cmd_prefs, prefs.showPreferencesDialog);
 
     var automaton = CommandManager.get(cmd_auto_id);
-    $(automaton).on('checkedStateChange', function() {
+    automaton.on('checkedStateChange', function() {
         prefs.set("on-save", automaton.getChecked());
     });
 
