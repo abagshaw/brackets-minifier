@@ -10,7 +10,7 @@ define({
     "MINIFY_PROJECT_SAVE" : "Pienennä projekti tallennettaessa \u2013 <strong>HUOM.: valinnan ”Pienennä tallennettaessa” täytyy olla valittuna!</strong>",
     "MINIFY_JS"           : "Pienennä JavaScript",
     "MINIFY_CSS"          : "Pienennä CSS",
-    "GENERATE_MAP"        : "Luo lähdekartta .js-tiedostoille",
+    "GENERATE_MAP"        : "Luo lähdekartat .js-tiedostoille",
     "KEEP_LICENSE"        : "Säilytä alkuosan lisenssi-ilmoitus (jos sellainen on)",
     "CUSTOM_JS_PATH"      : "Mukautettu pienennetyn JavaScriptin polku:",
     "CUSTOM_CSS_PATH"     : "Mukautettu pienennetyn CSS:n polku:",
