@@ -10,9 +10,11 @@
         "brackets": ">=0.24.0"
     },
 	"i18n": [
-        "en", 
+        "ca", 
+        "en",
+        "es",
         "fi",
-        "it" 
+        "it"
     ],
     "keywords": [
         "css",
