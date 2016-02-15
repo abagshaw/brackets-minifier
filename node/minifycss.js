@@ -15,7 +15,10 @@
         } catch (err) {
             domainManager.emitEvent("minifycss", "statusUpdate", err.toString());
         }
-        var minified = new CleanCSS().minify(text).styles;
+        var options = {
+            processImport: false
+        }
+        var minified = new CleanCSS(options).minify(text).styles;
         return mkfile(filepath, customPath, minified);
     }
 
