@@ -15,6 +15,7 @@ define(function (require, exports, module) {
     module.exports = {
         root: true,
         "ca": true,
+        "de": true,
         "es": true,
         "fi": true,
         "it": true
