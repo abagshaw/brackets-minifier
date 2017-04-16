@@ -30,7 +30,6 @@ To minify all JS and CSS files in the current project (and subdirectories), use 
 
 **NOTE: Files open in the *Working Files* area that are not located within the current project directory are not considered part of the current project and will not be included in project minification, affected by project minification settings or trigger project minification on save. These files can still be minified using [single file minification](#single-file-minification)**
 
----
 #### Excluding Files/Directories/Filetypes
 You can exclude certain directories and files by entering each directory/file on a new line in the *Directories/Files to Exclude from Project Minification* area. Excluded directories must include trailing slash!
 
