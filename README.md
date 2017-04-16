@@ -22,7 +22,7 @@ Clone this repository into `~/Library/Application Support/Brackets/extensions/us
 To minify a file, use the keyboard shortcut `Cmd/Ctrl+Alt+M` (this will also save the file if there are unsaved changes). You can also minify files on save by checking *Minify on Save* in the *Edit* menu.
 
 ### Project Minification
-To minify all JS and CSS files in the current project (and subdirectories), use the keyboard shortcut `Cmd/Ctrl+Alt+A`. You can also set the whole project to be minified on save by going to *Edit -> Minifier Preferences* and selecting *Minify Project on Save*. This will minify the all JS and CSS files in the current project when saving *any file* located in the current project - not necessarily a JS or CSS file. If any file about to be minified has unsaved changes, it will be saved first.
+To minify all JS and CSS files in the current project (and subdirectories), use the keyboard shortcut `Cmd/Ctrl+Alt+A`. You can also set the whole project to be minified on save by going to *Edit -> Minifier Preferences* and selecting *Minify Project on Save*. This will minify all the JS and CSS files in the current project when saving *any file* located in the current project - not necessarily a JS or CSS file. If any file about to be minified has unsaved changes, it will be saved first.
 
 **NOTE: To minify the whole project on save you must *also* check the *Minify on Save* option in the *Edit* menu.**
 
@@ -31,7 +31,9 @@ To minify all JS and CSS files in the current project (and subdirectories), use 
 #### Excluding Files/Directories/Filetypes
 You can exclude certain directories and files by entering each directory/file on a new line in the *Directories/Files to Exclude from Project Minification* area. Excluded directories must include trailing slash!
 
-You can also exclude all JS or CSS files from being minified by unchecking either of the *Minify JavaScript during Project Minification* or *Minify CSS during Project Minification* options in the *Minifier Preferences* panel. 
+You can also exclude all JS or CSS files from being minified by unchecking either of the *Minify JavaScript during Project Minification* or *Minify CSS during Project Minification* options in the *Minifier Preferences* panel.
+
+NOTE: [Concatenated](#concatenation) files are always minified whether or not their specific filetype is disabled for minification as described above.
 
 NOTE: Excluded files or files of an excluded directory/filetype can still be minified using [single file minification](#single-file-minification).
 
@@ -54,7 +56,7 @@ NOTE: Concatenation will *ignore* files with the same name as the desired name f
 #### UglifyJS2 Settings
 You can choose to not *mangle* and/or *compress* your JavaScript during minification with the appropriate options at the bottom of the *Minifier Project Preferences* panel. For more information about these options please refer to the [UglifyJS2 documentation](https://github.com/mishoo/UglifyJS2)
 
-NOTE: These two options also apply to **both** [single file minification](#single-file-minification) and [project minification](#project-minification).
+NOTE: These two options also apply to [single file minification](#single-file-minification), [project minification](#project-minification) and minified concatenated JS files generated with the [concatenation](#concatenation) feature.
 
 ---
 All preferences shown in the *Minifier Project Preferences* panel will be saved in a `.brackets.json` file at the root of the current project and as such, only apply to the current project. This allows for consistent settings when collaborating on a project.
