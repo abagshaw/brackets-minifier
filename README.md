@@ -18,9 +18,11 @@ Clone this repository into `~/Library/Application Support/Brackets/extensions/us
 - [Custom Save Directories](#custom-save-directories)
 - [Concatenation](#concatenation)
 
+---
 ### Single File Minification
 To minify a file, use the keyboard shortcut `Cmd/Ctrl+Alt+M` (this will also save the file if there are unsaved changes). You can also minify files on save by checking *Minify on Save* in the *Edit* menu.
 
+---
 ### Project Minification
 To minify all JS and CSS files in the current project (and subdirectories), use the keyboard shortcut `Cmd/Ctrl+Alt+A`. You can also set the whole project to be minified on save by going to *Edit -> Minifier Preferences* and selecting *Minify Project on Save*. This will minify all the JS and CSS files in the current project when saving *any file* located in the current project - not necessarily a JS or CSS file. If any file about to be minified has unsaved changes, it will be saved first.
 
@@ -28,6 +30,7 @@ To minify all JS and CSS files in the current project (and subdirectories), use 
 
 **NOTE: Files open in the *Working Files* area that are not located within the current project directory are not considered part of the current project and will not be included in project minification, affected by project minification settings or trigger project minification on save. These files can still be minified using [single file minification](#single-file-minification)**
 
+---
 #### Excluding Files/Directories/Filetypes
 You can exclude certain directories and files by entering each directory/file on a new line in the *Directories/Files to Exclude from Project Minification* area. Excluded directories must include trailing slash!
 
@@ -37,7 +40,7 @@ NOTE: [Concatenated](#concatenation) files are always minified whether or not th
 
 NOTE: Excluded files or files of an excluded directory/filetype can still be minified using [single file minification](#single-file-minification).
 
-
+---
 ### Custom Save Directories
 To specify custom paths to save minified files to, go to *Edit -> Minifier Preferences* and enter the desired paths for minified CSS and JS files in the spaces provided. These paths begin at the project root directory.
 
@@ -45,6 +48,7 @@ Leaving a path blank will set the minified files of that type to be saved in the
 
 NOTE: Custom save directories will apply to [single file minification](#single-file-minification) (on files within the current project), [project minification](#project-minification) and concatenated files generated with the [concatenation](#concatenation) feature.
 
+---
 ### Concatenation
 To enable concatenation, go to *Edit -> Minifier Preferences* and enter the desired name for your concatenated CSS and/or JS file(s) in the spaces provided in the concatenation section. A blank field will disable concatenation for that type of file (i.e. leaving the name for concatenated CSS file field blank will disable CSS concatenation). Only enter the name of the file without the extension. For example, entering (`alljs` in the JS concatenated file name field will result in a `alljs.js` file and `alljs.min.js` file being created for the raw concatenated file and minified concatenated file respectively). Concatenated files will be saved in the root of the project directory or in the [custom save directory](#custom-save-directory) if one is specified for that specific file type (CSS or JS).
 
