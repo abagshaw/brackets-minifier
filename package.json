@@ -10,7 +10,7 @@
         "brackets": ">=0.24.0"
     },
 	"i18n": [
-        "ca", 
+        "ca",
         "en",
         "es",
         "fi",
@@ -24,7 +24,7 @@
         "min",
         "uglifyjs",
         "clean css",
-		"concatenation",
-		"concatenate"
+        "concatenation",
+        "concatenate"
     ]
 }
