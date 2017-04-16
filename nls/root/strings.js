@@ -29,4 +29,8 @@ define({
     "MINIFYING"           : "Minifying\u2026",
     "MINIFYING_PROJECT"   : "Minifying project\u2026",
     "NO_FILES"            : "No files to minify!",
+	"CONCAT_JS_FILE"      : "Custom Name for Concatenated+Minified JS file:",
+	"CONCAT_CSS_FILE"     : "Custom Name for Concatenated+Minified CSS file:",
+	"CONCAT_SETTINGS"     : "Concatenation Settings:<br><br>Leave below field(s) blank to disable JS or CSS concatenation (respectively). Enter filenames without extention (.js and .min.jss or .css and .min.css will be added). Concatenation only runs during project minification not single file minification!",
+	"PROJECT_CONCAT"      : "Project Minified & Concatenated"
 });

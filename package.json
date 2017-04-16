@@ -1,9 +1,9 @@
 {
     "name": "brackets-minify",
     "title": "JS CSS Minifier",
-    "description": "Minifies your JavaScript and CSS files with UglifyJS2 and CleanCSS. Includes Project Minification and Customizable Save Paths for Minified Files.",
+    "description": "Minifies your JavaScript and CSS files with UglifyJS2 and CleanCSS. Now with concatenation for CSS and JS files!",
     "homepage": "https://github.com/abagshaw/brackets-minifier",
-    "version": "1.1.7",
+    "version": "2.0.0",
     "author": "Andrew Bagshaw",
     "license": "https://github.com/abagshaw/brackets-minifier#license",
     "engines": {
@@ -23,6 +23,8 @@
         "optimization",
         "min",
         "uglifyjs",
-        "clean css"
+        "clean css",
+		"concatenation",
+		"concatenate"
     ]
 }

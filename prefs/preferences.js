@@ -13,6 +13,8 @@ define(function(require, exports, module) {
     prefs.definePreference("project-exclude", "string", "");
     prefs.definePreference("js-custom-path", "string", "");
     prefs.definePreference("css-custom-path", "string", "");
+	prefs.definePreference("concat-js-filename", "string", "");
+	prefs.definePreference("concat-css-filename", "string", "");
     prefs.definePreference("js-compress", "boolean", true);
     prefs.definePreference("js-mangle", "boolean", true);
     prefs.definePreference("js-project-minify", "boolean", true);
@@ -45,13 +47,13 @@ define(function(require, exports, module) {
     }
 
     function showMinifierPreferencesDialog() {
-        var dialogWindow, projectSave, minifyJS, minifyCSS, generateMap, keepLicense, jsPath, cssPath, excludes, mangleJS, compressJS;
+        var dialogWindow, projectSave, minifyJS, minifyCSS, generateMap, keepLicense, jsPath, cssPath, excludes, mangleJS, compressJS, concatJS, concatCSS;
         $.valHooks.textarea = {
             get: function(elem) {
                 return elem.value.replace(/\r?\n/g, "<br>");
             }
         };
-        var promise = Dialogs.showModalDialogUsingTemplate(Mustache.render(PrefsTemplate, Strings)).done(function(id) {
+        var promise = Dialogs.showModalDialogUsingTemplate(brackets.getModule("thirdparty/mustache/mustache").render(PrefsTemplate, Strings)).done(function(id) {
             if (id === Dialogs.DIALOG_BTN_OK) {
                 setPref("on-save-project", projectSave[0].checked, "project");
                 setPref("js-project-minify", minifyJS[0].checked, "project");
@@ -61,6 +63,8 @@ define(function(require, exports, module) {
                 setPref("js-custom-path", $.trim(jsPath.val()), "project");
                 setPref("css-custom-path", $.trim(cssPath.val()), "project");
                 setPref("project-exclude", $.trim(excludes.val()), "project");
+				setPref("concat-js-filename", $.trim(concatJS.val()), "project");
+                setPref("concat-css-filename", $.trim(concatCSS.val()), "project");
                 setPref("js-mangle", mangleJS[0].checked, "project");
                 setPref("js-compress", compressJS[0].checked, "project");
             }
@@ -78,6 +82,8 @@ define(function(require, exports, module) {
         excludes    = dialogWindow.find("#minifier-exclude-paths");
         mangleJS    = dialogWindow.find("#minifier-manglejs");
         compressJS  = dialogWindow.find("#minifier-compressjs");
+		concatJS    = dialogWindow.find("#minifier-concat-js-filename");
+		concatCSS   = dialogWindow.find("#minifier-concat-css-filename");
 
         projectSave[0].checked = !!getPref("on-save-project");
         minifyJS[0].checked    = !!getPref("js-project-minify");
@@ -88,6 +94,8 @@ define(function(require, exports, module) {
         compressJS[0].checked  = !!getPref("js-compress");
         jsPath.val(getPref("js-custom-path"));
         cssPath.val(getPref("css-custom-path"));
+		concatJS.val(getPref("concat-js-filename"));
+        concatCSS.val(getPref("concat-css-filename"));
         excludes.val(getPref("project-exclude").replace(/<br>/g, "\n"));
 
         projectSave.focus();

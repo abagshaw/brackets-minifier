@@ -16,17 +16,24 @@ define(function(require, exports, module) {
         prefs           = require("prefs/preferences"),
         Strings         = require("strings");
 
-    var cssAction = new NodeDomain("minifycss", ExtensionUtils.getModulePath(module, "node/minifycss")),
-        jsAction  = new NodeDomain("minifyjs", ExtensionUtils.getModulePath(module, "node/minifyjs"));
+    var cssAction     = new NodeDomain("minifycss", ExtensionUtils.getModulePath(module, "node/minifycss")),
+        jsAction      = new NodeDomain("minifyjs", ExtensionUtils.getModulePath(module, "node/minifyjs")),
+		concatAction  = new NodeDomain("concatFiles", ExtensionUtils.getModulePath(module, "node/concatenate"));
 
     $("#status-indicators").prepend('<div id="min-status" style="text-align: right;"></div>');
     var tunnel = $("#min-status");
 
-    var inAction     = false,
-        wholeProject = false,
-        totalSuccess = 0,
-        totalFiles   = 0,
-        actionID     = 0;
+    var inAction       = false,
+        wholeProject   = false,
+        totalSuccess   = 0,
+        totalFiles     = 0,
+        actionID       = 0,
+		allConcatCSS   = "",
+		allConcatJS    = "",
+		concatenateJS  = false,
+		concatenateCSS = false,
+		onConcat       = false,
+		currentFiles;
 
     var mainProjectPath,
         excludedFolders;
@@ -39,8 +46,16 @@ define(function(require, exports, module) {
     }
 
     function checkProjectComplete() {
+		var addedMore = false;
         if (totalFiles === 0) {
-            if (totalSuccess === 0) {
+			if (onConcat) {
+				statusUpdate(Strings.PROJECT_CONCAT, 0, 1500);
+                inAction = false;
+			} else if (totalSuccess === 0) {
+				//Check to see if we need to do some concatenation action!
+				if(concatenateProject()) {
+					return; //We've added the concatenated files to be processed so wait for that to finish.
+				}
                 statusUpdate(Strings.PROJECT_MINIFIED, 0, 1500);
                 inAction = false;
             } else {
@@ -102,9 +117,18 @@ define(function(require, exports, module) {
             }
         }
     }
+    function concatStatusUpdateCallback(event, returnText) {
+        var fileLanguage = returnText.split(".").pop();
+		if (fileLanguage === "js") {
+			minifyJS(returnText, returnText.slice(0, -3).concat(".min.js"), null)
+		} else if (fileLanguage === "css") {
+			minifyCSS(returnText, returnText.slice(0, -4).concat(".min.css"), null)
+		}
+    }
 
     jsAction.on("statusUpdate", statusUpdateCallback);
     cssAction.on("statusUpdate", statusUpdateCallback);
+	concatAction.on("statusUpdate", concatStatusUpdateCallback);
 
     function getFiles() {
         function filter(file) {
@@ -116,12 +140,6 @@ define(function(require, exports, module) {
                 return false;
             }
             if (fileName.match(new RegExp("\\.min\\." + fileLanguage)) || (fileLanguage !== "js" && fileLanguage !== "css")) {
-                return false;
-            }
-            if (!prefs.get("js-project-minify") && fileLanguage === "js") {
-                return false;
-            }
-            if (!prefs.get("css-project-minify") && fileLanguage === "css") {
                 return false;
             }
             for (var i = 0; i < excludedFolders.length; i++) {
@@ -137,7 +155,54 @@ define(function(require, exports, module) {
         }
         return ProjectManager.getAllFiles(filter, true, true);
     }
-
+	function concatenateProject() {
+		var runningConcat = false;
+		if(prefs.get("concat-js-filename") !== "") {
+			var jsConcatFiles = [];
+			var concatSavePath = FileUtils.convertToNativePath(stripSlashes(mainProjectPath).concat("/").concat(stripSlashes(prefs.get("concat-js-filename"))).concat(".js"));
+			if(prefs.get("js-custom-path") !== "") {
+				concatSavePath = FileUtils.convertToNativePath(stripSlashes(mainProjectPath).concat("/").concat(stripSlashes(prefs.get("js-custom-path"))).concat("/").concat(stripSlashes(prefs.get("concat-js-filename"))).concat(".js"));
+			}
+			for(var i = 0; i < currentFiles.length; i++) {
+				if(currentFiles[i].fullPath.split('.').pop() === "js" && !currentFiles[i].fullPath.endsWith(prefs.get("concat-js-filename").concat(".js"))) {
+					jsConcatFiles.push(currentFiles[i].fullPath);
+				}
+			}
+			if (jsConcatFiles.length > 0) {
+				onConcat = true;
+				concatAction.exec("goConcatProject", jsConcatFiles, concatSavePath).fail(function(err) {
+					console.log("Error occured during concatenation.");
+					console.log(err);
+				});
+				totalFiles++;
+				totalSuccess++;
+				runningConcat = true;
+			}
+		}
+		if(prefs.get("concat-css-filename") !== "") {
+			var cssConcatFiles = [];
+			var concatSavePath = FileUtils.convertToNativePath(stripSlashes(mainProjectPath).concat("/").concat(stripSlashes(prefs.get("concat-css-filename"))).concat(".css"));
+			if(prefs.get("css-custom-path") !== "") {
+				concatSavePath = FileUtils.convertToNativePath(stripSlashes(mainProjectPath).concat("/").concat(stripSlashes(prefs.get("css-custom-path"))).concat("/").concat(stripSlashes(prefs.get("concat-css-filename"))).concat(".css"));
+			}
+			for(var i = 0; i < currentFiles.length; i++) {
+				if(currentFiles[i].fullPath.split('.').pop() === "css" && !currentFiles[i].fullPath.endsWith(prefs.get("concat-css-filename").concat(".css"))) {
+					cssConcatFiles.push(currentFiles[i].fullPath);
+				}
+			}
+			if (cssConcatFiles.length > 0) {
+				onConcat = true;
+				concatAction.exec("goConcatProject", cssConcatFiles, concatSavePath).fail(function(err) {
+					console.log("Error occured during concatenation.");
+					console.log(err);
+				});
+				totalFiles++;
+				totalSuccess++;
+				runningConcat = true;
+			}
+		}
+		return runningConcat;
+	}
     function minifyJS(currentPath, path, customPath) {
         jsAction.exec("goMinifyJS", currentPath, path, customPath, prefs.get("js-compress"), prefs.get("js-mangle")).fail(function(err) {
             console.log(err.toString());
@@ -210,6 +275,9 @@ define(function(require, exports, module) {
         if (inAction) {
             return;
         }
+		onConcat = false;
+		concatenateJS = false;
+		concatenateCSS = false;
         mainProjectPath = FileUtils.convertToNativePath(ProjectManager.getProjectRoot().fullPath);
         inAction = true;
         wholeProject = false;
@@ -237,23 +305,39 @@ define(function(require, exports, module) {
         if (inAction) {
             return;
         }
+		onConcat = false;
         excludedFolders = prefs.get("project-exclude").split("<br>").filter(Boolean);
         mainProjectPath = FileUtils.convertToNativePath(ProjectManager.getProjectRoot().fullPath);
         inAction = true;
         wholeProject = true;
         statusUpdate(Strings.MINIFYING_PROJECT, 0, 0);
-        getFiles().done(function(fileListResult, other) {
+        getFiles().done(function(fileListResultPassed, other) {
+			var fileListResult = [];
+			currentFiles = fileListResultPassed;
+			for(var i = 0; i < fileListResultPassed.length; i++) {
+				if (!prefs.get("css-project-minify") && fileListResultPassed[i].fullPath.split('.').pop() === "css") {
+					continue;
+				}
+				if (!prefs.get("js-project-minify") && fileListResultPassed[i].fullPath.split('.').pop() === "js") {
+					continue;
+				}
+				fileListResult.push(fileListResultPassed[i]);
+			}
             totalFiles = fileListResult.length;
             totalSuccess = fileListResult.length;
             if (totalFiles === 0) {
                 statusUpdate(Strings.NO_FILES, 0, 1750);
+				//Check to see if we need to do some concatenation action!
+				if(concatenateProject()) {
+					return; //We've added the concatenated files to be processed so wait for that to finish.
+				}
                 inAction = false;
                 return;
             }
             var openDocuments = DocumentManager.getAllOpenDocuments().filter(function(currentDocument) { return currentDocument.file; });
             var openDocumentPaths = $.map(openDocuments, function (oneDoc){ return oneDoc.file.fullPath; });
             fileListResult.forEach(function(file) {
-                var fileLanguage = file.fullPath.split('.').pop();
+                var fileLanguage = file.fullPath.split('.').pop();				
                 if (openDocumentPaths.indexOf(file.fullPath) > -1) {
                     processAfterSave(fileLanguage, openDocuments[openDocumentPaths.indexOf(file.fullPath)]);
                 } else {

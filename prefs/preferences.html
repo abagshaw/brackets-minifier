@@ -48,6 +48,20 @@
 		<hr style="margin-left:20px;margin-right:6px;border-color:#000;border-bottom:0px;">
 		<div class="field-container clearfix">
             <label style="float: none;padding-left:20px;text-align:left;">
+                {{{CONCAT_SETTINGS}}}
+            </label>
+        </div>
+		<div class="field-container clearfix" style="padding-left:20px;padding-right:20px;padding-top: 8px;">
+            <label style="padding-right: 6px;box-sizing: border-box;">{{CONCAT_JS_FILE}}</label>
+            <input type="text" name="minifier-concat-js-filename" id="minifier-concat-js-filename" style="width:100%;" />
+        </div>
+		<div class="field-container clearfix" style="padding-left:20px;padding-right:20px;padding-top: 8px;">
+            <label style="padding-right: 6px;box-sizing: border-box;">{{CONCAT_CSS_FILE}}</label>
+            <input type="text" name="minifier-concat-css-filename" id="minifier-concat-css-filename" style="width:100%;" />
+        </div>
+		<hr style="margin-left:20px;margin-right:6px;border-color:#000;border-bottom:0px;">
+		<div class="field-container clearfix">
+            <label style="float: none;padding-left:20px;text-align:left;">
                 {{UGLIFYJS_SETTINGS}}
             </label>
         </div>
