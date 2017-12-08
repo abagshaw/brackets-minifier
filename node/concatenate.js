@@ -2,12 +2,16 @@
     "use strict";
 
     var fs       = require('fs'),
+	    path     = require('path'),
         Concat   = require("concat-with-sourcemaps");
 
     var domainManager;
 
-    function concatenateProject(files, concatFilePath) {
-		var concatObj = new Concat(false, concatFilePath, '\n');
+    function concatenateProject(files, mainPath, customPath) {
+        if (customPath) {
+            mainPath = path.resolve(mainPath, customPath);
+        }
+		var concatObj = new Concat(false, mainPath, '\n');
 		for(var i = 0; i < files.length; i++) {
 			var tmpData;
 			try {
@@ -17,8 +21,8 @@
 			}
 			concatObj.add(files[i], tmpData);
 		}
-		fs.writeFileSync(concatFilePath, concatObj.content)
-		domainManager.emitEvent("concatFiles", "statusUpdate", concatFilePath);
+		fs.writeFileSync(mainPath, concatObj.content)
+		domainManager.emitEvent("concatFiles", "statusUpdate", mainPath);
     }
 
     function init(domainManagerPassed) {
@@ -38,9 +42,13 @@
                 type: "object",
                 description: "Files to concatenate"
             }, {
-                name: "concatFilePath",
+                name: "mainPath",
                 type: "string",
                 description: "Where to save concatenated file"
+            }, {
+                name: "customPath",
+                type: "string",
+                description: "Custom path where to save concatenated file"
             }]);
         domainManager.registerEvent("concatFiles",
             "statusUpdate",

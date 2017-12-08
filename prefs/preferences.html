@@ -62,18 +62,16 @@
 		<hr style="margin-left:20px;margin-right:6px;border-color:#000;border-bottom:0px;">
 		<div class="field-container clearfix">
             <label style="float: none;padding-left:20px;text-align:left;">
-                {{UGLIFYJS_SETTINGS}}
+                {{{MINIFIER_OPTIONS}}}
             </label>
         </div>
-		<div class="field-container clearfix" style="padding-left:20px;padding-top:10px;">
-            <label style="float: none;display:inline-block;">
-                <input type="checkbox" name="tab" id="minifier-manglejs" /> {{MANGLE_JS}}
-            </label>
+		<div class="field-container clearfix" style="padding-left:20px;padding-right:20px;padding-top: 8px;">
+            <label style="padding-right: 6px;box-sizing: border-box;"><a href="https://github.com/mishoo/UglifyJS2#minify-options">{{UGLIFYJS_OPTIONS}}</a></label>
+            <textarea name="minifier-exclude-path" id="minifier-uglifyjs-options" rows="5" style="white-space:nowrap;overflow: auto;width:100%;"></textarea>
         </div>
-		<div class="field-container clearfix" style="padding-left:20px;padding-top:8px;">
-            <label style="float: none;display:inline-block;">
-                <input type="checkbox" name="tab" id="minifier-compressjs" /> {{COMPRESS_JS}}
-            </label>
+		<div class="field-container clearfix" style="padding-left:20px;padding-right:20px;padding-top: 8px;">
+            <label style="padding-right: 6px;box-sizing: border-box;"><a href="https://github.com/jakubpawlowicz/clean-css#constructor-options">{{CLEANCSS_OPTIONS}}</a></label>
+            <textarea name="minifier-exclude-path" id="minifier-cleancss-options" rows="5" style="white-space:nowrap;overflow: auto;width:100%;"></textarea>
         </div>
     </div>
     <div class="modal-footer">

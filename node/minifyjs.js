@@ -8,23 +8,14 @@
 
     var domainManager;
 
-    function minifyJS(currentPath, filepath, customPath, compress, mangle) {
+    function minifyJS(currentPath, filepath, customPath, options) {
         var text;
         try {
             text = fs.readFileSync(currentPath).toString();
         } catch (err) {
             domainManager.emitEvent("minifyjs", "statusUpdate", err.toString());
         }
-        var ast = UglifyJS.parse(text);
-        ast.figure_out_scope();
-        ast.compute_char_frequency();
-        if (compress) {
-            ast = ast.transform(UglifyJS.Compressor());
-        }
-        if (mangle) {
-            ast.mangle_names();
-        }
-        var minified = ast.print_to_string();
+        var minified = UglifyJS.minify(text, JSON.parse(options)).code;
         return mkfile(filepath, customPath, minified);
     }
 
@@ -71,13 +62,9 @@
                 type: "string",
                 description: "Custom path where to save JS"
             }, {
-                name: "compress",
-                type: "string",
-                description: "True to compress"
-            }, {
-                name: "mangle",
-                type: "string",
-                description: "True to mangle"
+                name: "options",
+                type: "object",
+                description: "UglifyJS Options"
             }]);
         domainManager.registerEvent("minifyjs",
             "statusUpdate",

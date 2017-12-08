@@ -8,17 +8,14 @@
 
     var domainManager;
 
-    function minifyCSS(currentPath, filepath, customPath) {
+    function minifyCSS(currentPath, filepath, customPath, options) {
         var text;
         try {
             text = fs.readFileSync(currentPath).toString();
         } catch (err) {
             domainManager.emitEvent("minifycss", "statusUpdate", err.toString());
         }
-        var options = {
-            processImport: false
-        }
-        var minified = new CleanCSS(options).minify(text).styles;
+        var minified = new CleanCSS(JSON.parse(options)).minify(text).styles;
         return mkfile(filepath, customPath, minified);
     }
 
@@ -64,6 +61,10 @@
                 name: "customPath",
                 type: "string",
                 description: "Custom path where to save CSS"
+            }, {
+                name: "options",
+                type: "object",
+                description: "CleanCSS Options"
             }]);
         domainManager.registerEvent("minifycss",
             "statusUpdate",

@@ -16,16 +16,13 @@ test('implicit mode from umask', function (t) {
     
     mkpath(file, function (err) {
         if (err) t.fail(err);
-        else path.exists(file, function (ex) {
-            if (!ex) t.fail('file not created')
-            else fs.stat(file, function (err, stat) {
-                if (err) t.fail(err)
-                else {
-                    t.equal(stat.mode & 0777, 0777 & (~process.umask()));
-                    t.ok(stat.isDirectory(), 'target not a directory');
-                    t.end();
-                }
-            })
+        else fs.stat(file, function (err, stat) {
+            if (err) t.fail(err)
+            else {
+                t.equal(stat.mode & 0777, 0777 & (~process.umask()));
+                t.ok(stat.isDirectory(), 'target not a directory');
+                t.end();
+            }
         })
     });
 });

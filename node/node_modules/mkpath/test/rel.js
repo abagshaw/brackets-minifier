@@ -2,7 +2,6 @@
  * https://github.com/substack/node-mkdirp */
 
 var mkpath = require('../');
-var path = require('path');
 var fs = require('fs');
 var test = require('tap').test;
 
@@ -19,17 +18,14 @@ test('rel', function (t) {
     
     mkpath(file, 0755, function (err) {
         if (err) t.fail(err);
-        else path.exists(file, function (ex) {
-            if (!ex) t.fail('file not created')
-            else fs.stat(file, function (err, stat) {
-                if (err) t.fail(err)
-                else {
-                    process.chdir(cwd);
-                    t.equal(stat.mode & 0777, 0755);
-                    t.ok(stat.isDirectory(), 'target not a directory');
-                    t.end();
-                }
-            })
+        else fs.stat(file, function (err, stat) {
+            if (err) t.fail(err)
+            else {
+                process.chdir(cwd);
+                t.equal(stat.mode & 0777, 0755);
+                t.ok(stat.isDirectory(), 'target not a directory');
+                t.end();
+            }
         })
     });
 });

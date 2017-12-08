@@ -2,7 +2,6 @@
  * https://github.com/substack/node-mkdirp */
 
 var mkpath = require('../');
-var path = require('path');
 var fs = require('fs');
 var test = require('tap').test;
 

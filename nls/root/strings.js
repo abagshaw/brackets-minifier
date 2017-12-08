@@ -15,9 +15,6 @@ define({
     "CUSTOM_JS_PATH"      : "Custom Path for Minified JavaScript (leave blank for same folder as original file):",
     "CUSTOM_CSS_PATH"     : "Custom Path for Minified CSS (leave blank for same folder as original file):",
     "MINIFY_EXCLUDE"      : "Directories/Files to Exclude from Project Minification (each on seperate line):",
-    "UGLIFYJS_SETTINGS"   : "UglifyJS2 Settings (only apply to current project)",
-    "MANGLE_JS"           : "Mangle JavaScript",
-    "COMPRESS_JS"         : "Compress JavaScript",
     "PROJECT_MINIFIED"    : "Project Minified",
     "PROJECT_ERROR"       : "Some files couldn't be minified! Check console",
     "FOLDER_ERROR"        : "Error creating target folder!",
@@ -32,5 +29,8 @@ define({
 	"CONCAT_JS_FILE"      : "Custom Name for Concatenated+Minified JS file:",
 	"CONCAT_CSS_FILE"     : "Custom Name for Concatenated+Minified CSS file:",
 	"CONCAT_SETTINGS"     : "Concatenation Settings:<br><br>Leave below field(s) blank to disable JS or CSS concatenation (respectively). Enter filenames without extention (.js and .min.jss or .css and .min.css will be added). Concatenation only runs during project minification not single file minification!",
-	"PROJECT_CONCAT"      : "Project Minified & Concatenated"
+	"PROJECT_CONCAT"      : "Project Minified & Concatenated",
+    "MINIFIER_OPTIONS"    : "Set custom options for the JS and CSS minifiers. <b>Must be valid JSON objects!</b>",
+    "UGLIFYJS_OPTIONS"    : "UglifyJS3 Options:",
+    "CLEANCSS_OPTIONS"    : "CleanCSS Options:",
 });

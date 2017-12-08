@@ -13,6 +13,7 @@ define(function(require, exports, module) {
         ExtensionUtils  = brackets.getModule("utils/ExtensionUtils"),
         NodeDomain      = brackets.getModule("utils/NodeDomain"),
         LanguageManager = brackets.getModule("language/LanguageManager"),
+        ProjectManager  = brackets.getModule("project/ProjectManager"),
         prefs           = require("prefs/preferences"),
         Strings         = require("strings");
 
@@ -37,6 +38,29 @@ define(function(require, exports, module) {
 
     var mainProjectPath,
         excludedFolders;
+		
+	//REMOVE THE FOLLOWING IN LATER VERSIONS
+	ProjectManager.on("projectOpen", function() {
+		//Port over UglifyJS options from older brackets-minifier v1
+		setTimeout(function() {
+			var newOptions = [];
+			if(prefs.get("js-compress", "project") === true || prefs.get("js-compress", "project") === false) {
+				if(prefs.get("js-compress", "project") === false) {
+					newOptions.push('"compress": false');
+				}
+				prefs.set("js-compress", undefined, "project");
+			}
+			if(prefs.get("js-mangle", "project") === true || prefs.get("js-mangle", "project") === false) {
+				if(prefs.get("js-mangle", "project") === false) {
+					newOptions.push('"mangle": false');
+				}
+				prefs.set("js-mangle", undefined, "project");
+			}
+			if(newOptions.length > 0) {
+				prefs.set("uglifyjs-options", '{\n' + newOptions.join(',\n') + '\n}', "project");
+			}
+		}, 1000);
+	});
 
     function stripSlashes(str, leaveBack) {
         if (leaveBack) {
@@ -117,12 +141,12 @@ define(function(require, exports, module) {
             }
         }
     }
-    function concatStatusUpdateCallback(event, returnText) {
-        var fileLanguage = returnText.split(".").pop();
+    function concatStatusUpdateCallback(event, concatFile) {
+        var fileLanguage = concatFile.split(".").pop();
 		if (fileLanguage === "js") {
-			minifyJS(returnText, returnText.slice(0, -3).concat(".min.js"), null)
+			minifyJS(concatFile, concatFile.slice(0, -3).concat(".min.js"), null);
 		} else if (fileLanguage === "css") {
-			minifyCSS(returnText, returnText.slice(0, -4).concat(".min.css"), null)
+			minifyCSS(concatFile, concatFile.slice(0, -4).concat(".min.css"), null);
 		}
     }
 
@@ -157,11 +181,14 @@ define(function(require, exports, module) {
     }
 	function concatenateProject() {
 		var runningConcat = false;
+		
 		if(prefs.get("concat-js-filename") !== "") {
 			var jsConcatFiles = [];
 			var concatSavePath = FileUtils.convertToNativePath(stripSlashes(mainProjectPath).concat("/").concat(stripSlashes(prefs.get("concat-js-filename"))).concat(".js"));
-			if(prefs.get("js-custom-path") !== "") {
-				concatSavePath = FileUtils.convertToNativePath(stripSlashes(mainProjectPath).concat("/").concat(stripSlashes(prefs.get("js-custom-path"))).concat("/").concat(stripSlashes(prefs.get("concat-js-filename"))).concat(".js"));
+			var customPath = prefs.get("js-custom-path");
+			if(customPath) {
+				concatSavePath = mainProjectPath;
+				customPath = FileUtils.convertToNativePath(stripSlashes(prefs.get("js-custom-path")).concat("/").concat(stripSlashes(prefs.get("concat-js-filename"))).concat(".js"));
 			}
 			for(var i = 0; i < currentFiles.length; i++) {
 				if(currentFiles[i].fullPath.split('.').pop() === "js" && !currentFiles[i].fullPath.endsWith(prefs.get("concat-js-filename").concat(".js"))) {
@@ -170,7 +197,7 @@ define(function(require, exports, module) {
 			}
 			if (jsConcatFiles.length > 0) {
 				onConcat = true;
-				concatAction.exec("goConcatProject", jsConcatFiles, concatSavePath).fail(function(err) {
+				concatAction.exec("goConcatProject", jsConcatFiles, concatSavePath, customPath).fail(function(err) {
 					console.log("Error occured during concatenation.");
 					console.log(err);
 				});
@@ -182,8 +209,10 @@ define(function(require, exports, module) {
 		if(prefs.get("concat-css-filename") !== "") {
 			var cssConcatFiles = [];
 			var concatSavePath = FileUtils.convertToNativePath(stripSlashes(mainProjectPath).concat("/").concat(stripSlashes(prefs.get("concat-css-filename"))).concat(".css"));
-			if(prefs.get("css-custom-path") !== "") {
-				concatSavePath = FileUtils.convertToNativePath(stripSlashes(mainProjectPath).concat("/").concat(stripSlashes(prefs.get("css-custom-path"))).concat("/").concat(stripSlashes(prefs.get("concat-css-filename"))).concat(".css"));
+			var customPath = prefs.get("css-custom-path");
+			if(customPath) {
+				concatSavePath = mainProjectPath;
+				customPath = FileUtils.convertToNativePath(stripSlashes(prefs.get("css-custom-path")).concat("/").concat(stripSlashes(prefs.get("concat-css-filename"))).concat(".css"));
 			}
 			for(var i = 0; i < currentFiles.length; i++) {
 				if(currentFiles[i].fullPath.split('.').pop() === "css" && !currentFiles[i].fullPath.endsWith(prefs.get("concat-css-filename").concat(".css"))) {
@@ -192,7 +221,7 @@ define(function(require, exports, module) {
 			}
 			if (cssConcatFiles.length > 0) {
 				onConcat = true;
-				concatAction.exec("goConcatProject", cssConcatFiles, concatSavePath).fail(function(err) {
+				concatAction.exec("goConcatProject", cssConcatFiles, concatSavePath, customPath).fail(function(err) {
 					console.log("Error occured during concatenation.");
 					console.log(err);
 				});
@@ -204,7 +233,7 @@ define(function(require, exports, module) {
 		return runningConcat;
 	}
     function minifyJS(currentPath, path, customPath) {
-        jsAction.exec("goMinifyJS", currentPath, path, customPath, prefs.get("js-compress"), prefs.get("js-mangle")).fail(function(err) {
+        jsAction.exec("goMinifyJS", currentPath, path, customPath, prefs.get("uglifyjs-options").replace(/<br>/g, "")).fail(function(err) {
             console.log(err.toString());
             if (wholeProject) {
                 totalFiles--;
@@ -217,7 +246,7 @@ define(function(require, exports, module) {
     }
 
     function minifyCSS(currentPath, path, customPath) {
-        cssAction.exec("goMinifyCSS", currentPath, path, customPath).fail(function(err) {
+        cssAction.exec("goMinifyCSS", currentPath, path, customPath, prefs.get("cleancss-options").replace(/<br>/g, "")).fail(function(err) {
             if (wholeProject) {
                 totalFiles--;
                 checkProjectComplete();
@@ -275,9 +304,9 @@ define(function(require, exports, module) {
         if (inAction) {
             return;
         }
-		onConcat = false;
-		concatenateJS = false;
-		concatenateCSS = false;
+        onConcat = false;
+        concatenateJS = false;
+        concatenateCSS = false;
         mainProjectPath = FileUtils.convertToNativePath(ProjectManager.getProjectRoot().fullPath);
         inAction = true;
         wholeProject = false;
@@ -386,7 +415,7 @@ define(function(require, exports, module) {
         prefs.set("on-save", automaton.getChecked());
     });
 
-    menu.addMenuItem(cmd_min_id, [{ "key": "Ctrl-M" }, { "key": "Ctrl-Alt-M"}]); //Keeping existing Ctrl-M key binding for Windows users. Will be removed in future versions.
+    menu.addMenuItem(cmd_min_id, 'Ctrl-Alt-M');
     menu.addMenuItem(cmd_min_project_id, "Ctrl-Alt-A");
     menu.addMenuItem(automaton);
     menu.addMenuItem(cmd_prefs);
