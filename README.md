@@ -28,7 +28,7 @@ To minify all JS and CSS files in the current project (and subdirectories), use 
 
 **NOTE:** To minify the whole project on save you must *also* check the *Minify on Save* option in the *Edit* menu.
 
-**NOTE:** Files open in the *Working Files* area that are not located within the current project directory are not considered part of the current project and will not be included in project minification, affected by project minification settings or trigger project minification on save. These files can still be minified using [single file minification](#single-file-minification)
+**NOTE:** Files open in the *Working Files* area that are not located within the current project directory are not considered part of the current project and will not be included in project minification, affected by project minification settings or trigger project minification on save. These files can still be minified using [single file minification](#single-file-minification).
 
 #### Excluding Files/Directories/Filetypes
 You can exclude certain directories and files by entering each directory/file on a new line in the *Directories/Files to Exclude from Project Minification* area. Excluded directories **must** include trailing slash! Excluded JS/CSS files or JS/CSS files in excluded directories will not be minified during project minification and will also be ignored during [concatenation](#concatenation).
@@ -65,7 +65,7 @@ For example, to disable mangling and compression during JS minification you woul
 
 ```
 {
-"mangle": false,
-"compress": false
+  "mangle": false,
+  "compress": false
 }
 ```
