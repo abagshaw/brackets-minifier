@@ -1,3 +1,5 @@
+**NOTE: This plugin is currently unmaintained.** If anyone wants to take over work on it let me know!
+
 # Minifier for [Brackets](https://github.com/adobe/brackets)
 
 *Minifies JavaScript and CSS files in Brackets and saves to `{filename}.min.{ext}` using [UglifyJS3](https://github.com/mishoo/UglifyJS2) (for JavaScript) and [CleanCSS](https://github.com/jakubpawlowicz/clean-css) (for CSS).*
